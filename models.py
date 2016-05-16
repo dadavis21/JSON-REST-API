@@ -1,5 +1,5 @@
 from flask import url_for
-from JSON-REST-API import db
+from json_rest_api import db
 import datetime
 
 class User(db.Document):
@@ -10,7 +10,7 @@ class User(db.Document):
     gender = db.StringField(required=True)
     phone = db.StringField(required=True)
     age = db.IntField()
-    _id = ObjectIdField(unique=True)
+    _id = ObjectIdField(unique=True, required=True)
 
 class Cliq(db.Document):
     cliq_id = db.StringField(max_length=50, required=True)
@@ -18,4 +18,4 @@ class Cliq(db.Document):
     bio = db.StringField(max_length=255)
     pending_members = db.ListField(ReferenceField('User'))
     last_active = db.DateTimeField(default=datetime.datetime.now)
-    _id = ObjectIdField(unique=True)
+    _id = ObjectIdField(unique=True, required=True)
