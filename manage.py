@@ -8,8 +8,8 @@ from json_rest_api import app
 manager = Manager(app)
 
 manager.add_command("runserver", Server(
-    user_debugger = True,
-    user_reloader = True,
+    use_debugger = True,
+    use_reloader = True,
     host = '0.0.0.0')
 )
 
