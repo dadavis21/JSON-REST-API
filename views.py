@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, render_template, url_for
 from flask.views import MethodView
-from json_rest_api.models import User, Cliq
+import user
 from bson import json_util
 import json
 
@@ -22,7 +22,7 @@ class UserView(MethodView):
         db.users.update(
             {user_id:id},
             {
-                $set: {field:update}
+                '$set': {field:update}
             }
         )
 
@@ -41,7 +41,7 @@ class CliqView(MethodView):
         db.cliqs.update(
             {cliq_id:id},
             {
-                $set: {field:update}
+                '$set': {field:update}
             }
         )
 

@@ -14,7 +14,7 @@ app.config["SECRET_KEY"] = "whoridesmongo"
 db = MongoEngine(app)
 
 def register_blueprints(app):
-    from flask_rest_api.views import views
+    from views import views
     app.register_blueprint(views)
 register_blueprints(app)
 
