@@ -6,8 +6,8 @@ from bson.objectid import ObjectId
 import json
 from json_rest_api import db
 
-#Converts mongo bson objects to json to return in views
-#"dumps" outputs argument to a textfile and converts to json
+
+
 views = Blueprint('views', __name__)
 
 class UserView(MethodView):
@@ -26,13 +26,13 @@ class UserView(MethodView):
         )
         user.save()
         return user.to_json()
-
-    def get(self):
-        user = User.objects.get(user_id=user_id)
+    @views.route('/users/<id>', methods=['GET'])
+    def get(id):
+        user = User.objects.get(user_id=id)
         return user.to_json()
-
-    def put(self):
-        user = User.objects.get(user_id=user_id)
+    @views.route('/users/<id>', methods=['PUT'])
+    def put(id):
+        user = User.objects.get(user_id=id)
         if 'previous_cliqs' in request.json:
             user.modify(previous_cliqs, request.json['previous_cliqs'])
         if 'first_name' in request.json:
@@ -40,7 +40,7 @@ class UserView(MethodView):
         if 'last_name' in request.json:
             user.modify(last_name, request.json['last_name'])
         if 'gender' in request.json:
-            user.modify(gender, request.json['gender'])
+            User.objects.get(user_id=id).update(gender=request.json['gender'])
         if 'phone' in request.json:
             user.modify(phone, request.json['phone'])
         if 'age' in request.json:

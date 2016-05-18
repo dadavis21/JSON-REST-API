@@ -5,9 +5,7 @@ app = Flask(__name__)
 
 #General configuration for mongodb
 app.config["MONGODB_SETTINGS"] = {
-    'DB': "json_rest_api",
-    'username': 'api',
-    'password': 'cliq'
+    'DB': "json_rest_api"
 }
 app.config["SECRET_KEY"] = "whoridesmongo"
 
