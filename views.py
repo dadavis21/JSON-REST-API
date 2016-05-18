@@ -48,7 +48,7 @@ class UserView(MethodView):
         user.save()
         return user.to_json()
 
-    def delete(self)
+    def delete(self):
         user = User.objects.get(user_id=user_id)
         user.delete()
 
@@ -87,7 +87,7 @@ class CliqView(MethodView):
         cliq.save()
         return cliq.to_json()
 
-    def delete(self)
+    def delete(self):
         cliq = Cliq.objects.get(cliq_id=cliq_id)
         cliq.delete()
 
