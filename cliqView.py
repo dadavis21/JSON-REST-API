@@ -37,19 +37,19 @@ class CliqView(MethodView):
     def put(id):
         if not request.json:
             abort(400)
-        cliq = Cliq.objects(cliq_id=id)
+        cliq = Cliq.objects(cliq_id=id).first()
         if cliq == None:
             return jsonify({'Result':'Cliq does not exist'})
         if 'members' in request.json:
-            user.update(members, request.json['members'])
+            cliq.members = request.json['members']
         if 'bio' in request.json:
-            user.update(bio, request.json['bio'])
+            cliq.bio = request.json['bio']
         if 'pending_members' in request.json:
-            user.update(pending_members, request.json['pending_members'])
+            cliq.pending_members = request.json['pending_members']
         if 'last_active' in request.json:
-            user.update(last_active, request.json['last_active'])
+            cliq.last_active = request.json['last_active']
         cliq.save()
-        return cliq.first().to_json()
+        return cliq.to_json()
 
     @cliq_view.route('/cliqs/<id>', methods=['DELETE'])
     def delete(id):
