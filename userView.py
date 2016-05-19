@@ -1,12 +1,9 @@
-from flask import Blueprint, request, redirect, render_template, url_for, abort
+from flask import Blueprint, request, abort, jsonify
 from flask.views import MethodView
 from user import User
 from cliq import Cliq
 from bson.objectid import ObjectId
 import json
-from json_rest_api import db
-
-
 
 user_view = Blueprint('user_view', __name__)
 
@@ -29,30 +26,33 @@ class UserView(MethodView):
 
     @user_view.route('/users/<id>', methods=['GET'])
     def get(id):
-        user = User.objects.get(user_id=id)
+        user = User.objects(user_id=id)
         return user.to_json()
 
     @user_view.route('/users/<id>', methods=['PUT'])
     def put(id):
-        user = User.objects.get(user_id=id)
+        user = User.objects(user_id=id)
+        print id
+        if user == None:
+            abort(400)
         if 'previous_cliqs' in request.json:
-            user.modify(previous_cliqs, request.json['previous_cliqs'])
+            user.update(previous_cliqs, request.json['previous_cliqs'])
         if 'first_name' in request.json:
-            user.modify(first_name, request.json['first_name'])
+            user.update(first_name, request.json['first_name'])
         if 'last_name' in request.json:
-            user.modify(last_name, request.json['last_name'])
+            user.update(last_name, request.json['last_name'])
         if 'gender' in request.json:
-            user.modify(gender=request.json['gender'])
+            user.update(gender=request.json['gender'])
         if 'phone' in request.json:
-            user.modify(phone, request.json['phone'])
+            user.update(phone, request.json['phone'])
         if 'age' in request.json:
-            user.modify(age, request.json['age'])
-        user.save()
+            user.update(age, request.json['age'])
         return user.to_json()
 
     @user_view.route('/users/<id>', methods=['DELETE'])
     def delete(id):
-        user = User.objects.get(user_id=id)
+        user = User.objects(user_id=id)
         user.delete()
+        return jsonify ({'Result': 'Deleted'})
 
 user_view.add_url_rule('/users/', view_func=UserView.as_view('users'))
