@@ -12,8 +12,10 @@ app.config["SECRET_KEY"] = "whoridesmongo"
 db = MongoEngine(app)
 
 def register_blueprints(app):
-    from views import views
-    app.register_blueprint(views)
+    from userView import user_view
+    from cliqView import cliq_view
+    app.register_blueprint(user_view)
+    app.register_blueprint(cliq_view)
 register_blueprints(app)
 
 if __name__ == '__main__':
