@@ -11,8 +11,6 @@ class UserView(MethodView):
     def post(self):
         if not request.json:
             abort(400)
-        if not User.objects(user_id=request.json['user_id']).first == None:
-            return jsonify({'Result':'User ID already exists'})
         user = User(
             user_id= request.json['user_id'],
             previous_cliqs= request.json['previous_cliqs'],
@@ -28,8 +26,8 @@ class UserView(MethodView):
 
     @user_view.route('/users/<id>', methods=['GET'])
     def get(id):
-        user = User.objects(user_id=id)
-        if user.first() == None:
+        user = User.objects(user_id=id).first()
+        if user == None:
             return jsonify({'Result':'User does not exist'})
         return user.to_json()
 
@@ -37,8 +35,8 @@ class UserView(MethodView):
     def put(id):
         if not request.json:
             abort(400)
-        user = User.objects(user_id=id)
-        if user.first() == None:
+        user = User.objects(user_id=id).first()
+        if user == None:
             return jsonify({'Result':'User does not exist'})
         if 'previous_cliqs' in request.json:
             user.update(previous_cliqs, request.json['previous_cliqs'])
@@ -56,8 +54,8 @@ class UserView(MethodView):
 
     @user_view.route('/users/<id>', methods=['DELETE'])
     def delete(id):
-        user = User.objects(user_id=id)
-        if user.first() == None:
+        user = User.objects(user_id=id).first()
+        if user == None:
             return jsonify({'Result':'User does not exist'})
         user.delete()
         return jsonify ({'Result': 'Deleted'})

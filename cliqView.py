@@ -27,8 +27,8 @@ class CliqView(MethodView):
 
     @cliq_view.route('/cliqs/<id>', methods=['GET'])
     def get(id):
-        cliq = Cliq.objects(cliq_id=id)
-        if cliq.first() == None:
+        cliq = Cliq.objects(cliq_id=id).first()
+        if cliq == None:
             return jsonify({'Result':'Cliq does not exist'})
         return cliq.to_json()
 
@@ -36,8 +36,8 @@ class CliqView(MethodView):
     def put(id):
         if not request.json:
             abort(400)
-        cliq = Cliq.objects(cliq_id=id)
-        if cliq.first() == None:
+        cliq = Cliq.objects(cliq_id=id).first()
+        if cliq == None:
             return jsonify({'Result':'Cliq does not exist'})
         if 'members' in request.json:
             user.update(members, request.json['members'])
@@ -51,8 +51,8 @@ class CliqView(MethodView):
         return cliq.to_json()
     @cliq_view.route('/cliqs/<id>', methods=['DELETE'])
     def delete(id):
-        cliq = Cliq.objects(cliq_id=id)
-        if cliq.first() == None:
+        cliq = Cliq.objects(cliq_id=id).first()
+        if cliq == None:
             return jsonify({'Result':'Cliq does not exist'})
         cliq.delete()
         return jsonify({'Result':'Deleted'})
