@@ -11,9 +11,12 @@ class UserView(MethodView):
     def post(self):
         if not request.json:
             abort(400)
+        user = User.objects(user_id=request.json['user_id'])
+        if user.first() != None:
+            return jsonify({'Result':'User ID already exists'})
         user = User(
             user_id= request.json['user_id'],
-            previous_cliqs= request.json['previous_cliqs'],
+            cliqs= request.json['cliqs'],
             first_name= request.json['first_name'],
             last_name= request.json['last_name'],
             gender= request.json['gender'],
@@ -35,11 +38,11 @@ class UserView(MethodView):
     def put(id):
         if not request.json:
             abort(400)
-        user = User.objects(user_id=id).first()
-        if user == None:
+        user = User.objects(user_id=id)
+        if user.first() == None:
             return jsonify({'Result':'User does not exist'})
-        if 'previous_cliqs' in request.json:
-            user.update(previous_cliqs, request.json['previous_cliqs'])
+        if 'cliqs' in request.json:
+            user.update(cliqs, request.json['cliqs'])
         if 'first_name' in request.json:
             user.update(first_name, request.json['first_name'])
         if 'last_name' in request.json:
@@ -50,14 +53,14 @@ class UserView(MethodView):
             user.update(phone, request.json['phone'])
         if 'age' in request.json:
             user.update(age, request.json['age'])
-        return user.to_json()
+        return user.first().to_json()
 
     @user_view.route('/users/<id>', methods=['DELETE'])
     def delete(id):
-        user = User.objects(user_id=id).first()
-        if user == None:
+        user = User.objects(user_id=id)
+        if user.first() == None:
             return jsonify({'Result':'User does not exist'})
         user.delete()
-        return jsonify ({'Result': 'Deleted'})
+        return jsonify({'Result': 'Deleted'})
 
 user_view.add_url_rule('/users/', view_func=UserView.as_view('users'))
