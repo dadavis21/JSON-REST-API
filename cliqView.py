@@ -2,13 +2,14 @@ from flask import Blueprint, request, abort, jsonify
 from flask.views import MethodView
 from cliq import Cliq
 from bson.objectid import ObjectId
+from auth import auth
 import json
 import datetime
 
 cliq_view = Blueprint('cliq_view', __name__)
 
 class CliqView(MethodView):
-
+    @auth.login_required
     def post(self):
         if not request.json:
             abort(400)
@@ -27,6 +28,7 @@ class CliqView(MethodView):
         return cliq.to_json()
 
     @cliq_view.route('/cliqs/<id>', methods=['GET'])
+    @auth.login_required
     def get(id):
         cliq = Cliq.objects(cliq_id=id).first()
         if cliq == None:
@@ -34,6 +36,7 @@ class CliqView(MethodView):
         return cliq.to_json()
 
     @cliq_view.route('/cliqs/<id>', methods=['PUT'])
+    @auth.login_required
     def put(id):
         if not request.json:
             abort(400)
@@ -52,6 +55,7 @@ class CliqView(MethodView):
         return cliq.to_json()
 
     @cliq_view.route('/cliqs/<id>', methods=['DELETE'])
+    @auth.login_required
     def delete(id):
         cliq = Cliq.objects(cliq_id=id)
         if cliq.first() == None:

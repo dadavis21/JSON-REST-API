@@ -3,11 +3,13 @@ from flask.views import MethodView
 from user import User
 from cliq import Cliq
 from bson.objectid import ObjectId
+from json_rest_api.auth import auth
 import json
 
 user_view = Blueprint('user_view', __name__)
 
 class UserView(MethodView):
+    @auth.login_required
     def post(self):
         if not request.json:
             abort(400)
@@ -28,6 +30,7 @@ class UserView(MethodView):
         return user.to_json()
 
     @user_view.route('/users/<id>', methods=['GET'])
+    @auth.login_required
     def get(id):
         user = User.objects(user_id=id).first()
         if user == None:
@@ -35,6 +38,7 @@ class UserView(MethodView):
         return user.to_json()
 
     @user_view.route('/users/<id>', methods=['PUT'])
+    @auth.login_required
     def put(id):
         if not request.json:
             abort(400)
@@ -56,6 +60,7 @@ class UserView(MethodView):
         return user.first().to_json()
 
     @user_view.route('/users/<id>', methods=['DELETE'])
+    @auth.login_required
     def delete(id):
         user = User.objects(user_id=id)
         if user.first() == None:
